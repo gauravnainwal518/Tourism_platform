@@ -18,7 +18,7 @@ const app = express();
 
 // Middleware to enable CORS
 app.use(cors({
-    origin: 'http://localhost:5173', //frontend url
+    origin: 'https://tourism-platform.onrender.com', 
     methods: 'GET, POST, PUT, DELETE', // Allowed methods
     credentials: true, // Allow cookies/auth headers
 }));

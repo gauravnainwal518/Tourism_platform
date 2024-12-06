@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/guides';
+const API_URL = import.meta.env.VITE_API_URL || 'https://tourism-platform.onrender.com/api/guides';
 
 // Function to create a new guide
 const createGuide = async (guideData, token) => {
   try {
-    const response = await axios.post(`${'http://localhost:5000/api/guides'}/create`, guideData, {
+    const response = await axios.post(`${API_URL}/create`, guideData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -19,7 +19,7 @@ const createGuide = async (guideData, token) => {
 // Function to get all guides
 const getAllGuides = async (token) => {
   try {
-    const response = await axios.get('http://localhost:5000/api/guides', {
+    const response = await axios.get('https://tourism-platform.onrender.com/api/guides', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

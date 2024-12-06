@@ -9,7 +9,9 @@ const GuideList = () => {
     // Fetch available guides when the component mounts
     const fetchAvailableGuides = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/guides");
+        const response = await axios.get(
+          "https://tourism-platform.onrender.com/api/guides"
+        );
         console.log("Guides data:", response.data); // Debugging step-very useful
         setAvailableGuides(response.data);
       } catch (error) {

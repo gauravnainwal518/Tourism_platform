@@ -15,10 +15,13 @@ const AddGuide = () => {
     e.preventDefault();
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5000/api/guides", {
-        ...guideData,
-        languages: guideData.languages.split(",").map((lang) => lang.trim()), // Split and trim languages
-      });
+      const response = await axios.post(
+        "https://tourism-platform.onrender.com/api/guides",
+        {
+          ...guideData,
+          languages: guideData.languages.split(",").map((lang) => lang.trim()), // Split and trim languages
+        }
+      );
       setMessage("Guide registered successfully!");
       setGuideData({
         FullName: "",

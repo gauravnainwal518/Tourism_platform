@@ -42,7 +42,7 @@ const AddHomestay = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/homestays/create",
+        "https://tourism-platform.onrender.com/homestays/create",
         formData,
         {
           headers: {

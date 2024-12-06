@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/homestays';
+const API_URL = import.meta.env.VITE_API_URL || 'https://tourism-platform.onrender.com/api/homestays';
 
 //Function to create homestay
 export const createHomestay = async (homestayData, token) => {
@@ -28,7 +28,7 @@ export const createHomestay = async (homestayData, token) => {
 // Function to get all homestays
 export const getAllHomestays = async (token) => {
   try {
-    const response = await axios.get('http://localhost:5000/api/homestays', {
+    const response = await axios.get('https://tourism-platform.onrender.com/api/homestays', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
