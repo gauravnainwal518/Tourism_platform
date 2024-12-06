@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import mainVideo from "../assets/videos/mainvideo.mp4";
 import GodGrace from "../assets/images/Godgrace.jpg";
-import Cultural from "../assets/images/Culturalh.jpg";
+import Cultural from "../assets/images/culturalh.jpg";
 import Wildlife from "../assets/images/wildlife.jpg";
 import Natural from "../assets/images/natural.jpg";
 import Food from "../assets/images/food.jpg";
