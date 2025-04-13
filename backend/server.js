@@ -9,6 +9,8 @@ const guideRoutes = require('./routes/guideRoutes');
 const homestayRoutes = require('./routes/homestayRoutes');
 const bookingsRoutes = require("./routes/bookingsRoutes");
 
+
+
 const path = require ("path");
 
 
@@ -37,6 +39,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/homestays', homestayRoutes);
 app.use("/api/bookings", bookingsRoutes);
+
 
 app.use(express.static(path.join(_dirname, "/frontend/dist")));
 app.get('*', (_,res) =>{
