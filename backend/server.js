@@ -21,8 +21,9 @@ const __dirname = path.dirname(__filename);
 // Allowed origins for CORS
 const allowedOrigins = [
   'http://localhost:5173', // local frontend
-  // Add production frontend here if deployed later
+  'https://tourism-platform-kappa.vercel.app', // production frontend
 ];
+
 
 // Middleware
 app.use(cors({
