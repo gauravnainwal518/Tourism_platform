@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 // Admin
-import AdminLogin from "../admin/adminLogin";
+import AdminLogin from "../admin/AdminLogin";
 import HomestayApplication from "../admin/HomestayApplications";
 import GuideApplication from "../admin/GuideApplications";
 import AdminDashboard from "../admin/AdminDashboard";
