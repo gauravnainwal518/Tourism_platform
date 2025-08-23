@@ -23,13 +23,14 @@ import {
 
 const router = express.Router();
 
-//  Static / fixed routes first 
+
+// STATIC / FIXED ROUTES
 
 // Get all verified guides
 router.get("/", getGuides);
 
-// Get guide by User ID (for logged-in guide)
-router.get("/by-user/:userId", protect, getGuideByUserId); 
+// Get guide by User ID (logged-in guide)
+router.get("/by-user/:userId", protect, getGuideByUserId);
 
 // Get all pending guides (admin only)
 router.get("/pending/list", protect, adminOnly, getPendingGuides);
@@ -46,14 +47,20 @@ router.patch("/bookings/:bookingId/status", protect, guideOrAdmin, updateBooking
 // Guide gets their own bookings
 router.get("/bookings/for-me", protect, guideOnly, getGuideBookings);
 
-//  Dynamic routes 
+
+// DYNAMIC ROUTES (/:id)
+
 
 // Get guide by ID
 router.get("/:id", getGuideById);
 
-// Guide CRUD
+// Create a new guide
 router.post("/", protect, createGuide);
+
+// Update guide by ID
 router.put("/:id", protect, updateGuide);
+
+// Delete guide by ID
 router.delete("/:id", protect, deleteGuide);
 
 // User books a guide
