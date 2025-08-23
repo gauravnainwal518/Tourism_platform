@@ -1,5 +1,5 @@
 import Homestay from "../models/Homestay.js";
-import HomestayBooking from "../models/HomestayBooking.js";
+import HomestayBooking from "../models/HomeStayBooking.js";
 import User from "../models/User.js";
 
 const homestayController = {
