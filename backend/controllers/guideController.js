@@ -1,10 +1,10 @@
-const Guide = require("../models/Guide");
-const GuideBooking = require("../models/GuideBookings");
+import Guide from "../models/Guide.js";
+import GuideBooking from "../models/GuideBookings.js";
 
 // GUIDE CRUD 
 
-//create guide
-const createGuide = async (req, res) => {
+// Create guide
+export const createGuide = async (req, res) => {
   try {
     const { mobile, languages, experience, region } = req.body;
 
@@ -27,8 +27,8 @@ const createGuide = async (req, res) => {
   }
 };
 
-//get all verified guides
-const getGuides = async (req, res) => {
+// Get all verified guides
+export const getGuides = async (req, res) => {
   try {
     const guides = await Guide.find({ verified: true }).populate("user", "fullName email");
     res.json(guides);
@@ -37,8 +37,8 @@ const getGuides = async (req, res) => {
   }
 };
 
-//get single guide by id 
-const getGuideById = async (req, res) => {
+// Get single guide by ID
+export const getGuideById = async (req, res) => {
   try {
     const guide = await Guide.findById(req.params.id).populate("user", "fullName email");
     if (!guide) return res.status(404).json({ message: "Guide not found" });
@@ -49,7 +49,7 @@ const getGuideById = async (req, res) => {
 };
 
 // Get guide by User ID (for profile)
-const getGuideByUserId = async (req, res) => {
+export const getGuideByUserId = async (req, res) => {
   try {
     const guide = await Guide.findOne({ user: req.params.userId }).populate("user", "fullName email");
     if (!guide) return res.status(404).json({ message: "Guide not found" });
@@ -60,8 +60,7 @@ const getGuideByUserId = async (req, res) => {
 };
 
 // Update guide (admin verify or owner edit)
-
-const updateGuide = async (req, res) => {
+export const updateGuide = async (req, res) => {
   try {
     const guide = await Guide.findById(req.params.id);
     if (!guide) return res.status(404).json({ message: "Guide not found" });
@@ -79,8 +78,8 @@ const updateGuide = async (req, res) => {
   }
 };
 
-//Delete guide
-const deleteGuide = async (req, res) => {
+// Delete guide
+export const deleteGuide = async (req, res) => {
   try {
     const guide = await Guide.findById(req.params.id);
     if (!guide) return res.status(404).json({ message: "Guide not found" });
@@ -96,8 +95,8 @@ const deleteGuide = async (req, res) => {
   }
 };
 
-//Get pending guides (admin approval)
-const getPendingGuides = async (req, res) => {
+// Get pending guides (admin approval)
+export const getPendingGuides = async (req, res) => {
   try {
     const guides = await Guide.find({ verified: false }).populate("user", "fullName email");
     res.json(guides);
@@ -106,20 +105,17 @@ const getPendingGuides = async (req, res) => {
   }
 };
 
-//  BOOKING FUNCTIONS 
-//Book a guide 
-const bookGuide = async (req, res) => {
+// BOOKING FUNCTIONS
+
+// Book a guide
+export const bookGuide = async (req, res) => {
   try {
     const { date, notes } = req.body;
 
-    if (!date) {
-      return res.status(400).json({ message: "Booking date is required" });
-    }
+    if (!date) return res.status(400).json({ message: "Booking date is required" });
 
     const guide = await Guide.findById(req.params.id);
-    if (!guide || !guide.verified) {
-      return res.status(404).json({ message: "Guide not found or not verified" });
-    }
+    if (!guide || !guide.verified) return res.status(404).json({ message: "Guide not found or not verified" });
 
     const booking = new GuideBooking({
       guide: guide._id,
@@ -136,7 +132,7 @@ const bookGuide = async (req, res) => {
 };
 
 // Get bookings for logged-in user
-const getMyGuideBookings = async (req, res) => {
+export const getMyGuideBookings = async (req, res) => {
   try {
     const bookings = await GuideBooking.find({ user: req.user._id })
       .populate("guide", "region experience languages")
@@ -149,7 +145,7 @@ const getMyGuideBookings = async (req, res) => {
 };
 
 // Update booking status
-const updateBookingStatus = async (req, res) => {
+export const updateBookingStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
@@ -159,9 +155,7 @@ const updateBookingStatus = async (req, res) => {
 
     const booking = await GuideBooking.findById(req.params.bookingId).populate("guide", "user");
 
-    if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
-    }
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
 
     if (req.user.role !== "admin" && booking.guide.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized" });
@@ -177,12 +171,10 @@ const updateBookingStatus = async (req, res) => {
 };
 
 // Get bookings for the logged-in guide
-const getGuideBookings = async (req, res) => {
+export const getGuideBookings = async (req, res) => {
   try {
     const guide = await Guide.findOne({ user: req.user._id });
-    if (!guide) {
-      return res.status(404).json({ message: "Guide not found" });
-    }
+    if (!guide) return res.status(404).json({ message: "Guide not found" });
 
     const bookings = await GuideBooking.find({ guide: guide._id })
       .populate("user", "fullName email")
@@ -194,13 +186,11 @@ const getGuideBookings = async (req, res) => {
   }
 };
 
-//  Delete/cancel a guide booking
-const deleteGuideBooking = async (req, res) => {
+// Delete/cancel a guide booking
+export const deleteGuideBooking = async (req, res) => {
   try {
     const booking = await GuideBooking.findById(req.params.bookingId);
-    if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
-    }
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
 
     if (req.user.role !== "admin" && booking.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not authorized to cancel this booking" });
@@ -213,19 +203,4 @@ const deleteGuideBooking = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-module.exports = {
-  createGuide,
-  getGuides,
-  getGuideById,
-  getGuideByUserId,
-  updateGuide,
-  deleteGuide,
-  getPendingGuides,
-  bookGuide,
-  getMyGuideBookings,
-  getGuideBookings,
-  updateBookingStatus,
-  deleteGuideBooking,
 };

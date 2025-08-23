@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const homestayBookingSchema = new mongoose.Schema(
   {
@@ -8,10 +8,14 @@ const homestayBookingSchema = new mongoose.Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     guests: { type: Number, default: 1 },
-    status: { type: String, enum: ["pending", "accepted", "rejected","cancelled"], default: "pending" },
+    status: { 
+      type: String, 
+      enum: ["pending", "accepted", "rejected", "cancelled"], 
+      default: "pending" 
+    },
     notes: { type: String },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("HomestayBooking", homestayBookingSchema);
+export default mongoose.model("HomestayBooking", homestayBookingSchema);

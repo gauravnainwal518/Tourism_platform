@@ -1,11 +1,10 @@
-const jwt = require("jsonwebtoken");
-const Guide = require("../models/Guide");
-const Homestay = require("../models/Homestay");
-const User = require("../models/User");
-
+import jwt from "jsonwebtoken";
+import Guide from "../models/Guide.js";
+import Homestay from "../models/Homestay.js";
+import User from "../models/User.js";
 
 // Admin Login 
-const loginAdmin = async (req, res) => {
+export const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -27,7 +26,7 @@ const loginAdmin = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        name: "Admin", // Add this so frontend Header sees it
+        name: "Admin",
         email,
         role: "admin",
       },
@@ -38,8 +37,8 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-//  Dashboard 
-const getDashboardData = async (req, res) => {
+// Dashboard
+export const getDashboardData = async (req, res) => {
   try {
     const totalGuides = await Guide.countDocuments();
     const totalHomestays = await Homestay.countDocuments();
@@ -54,8 +53,8 @@ const getDashboardData = async (req, res) => {
   }
 };
 
-//  Pending Guides 
-const getPendingGuides = async (req, res) => {
+// Pending Guides
+export const getPendingGuides = async (req, res) => {
   try {
     const guides = await Guide.find({ verified: false }).populate("user", "fullName email");
     res.json({ success: true, guides });
@@ -66,7 +65,7 @@ const getPendingGuides = async (req, res) => {
 };
 
 // Approve guide
-const approveGuide = async (req, res) => {
+export const approveGuide = async (req, res) => {
   try {
     const guide = await Guide.findByIdAndUpdate(
       req.params.id,
@@ -82,7 +81,7 @@ const approveGuide = async (req, res) => {
 };
 
 // Reject guide
-const rejectGuide = async (req, res) => {
+export const rejectGuide = async (req, res) => {
   try {
     const guide = await Guide.findByIdAndDelete(req.params.id);
     if (!guide) return res.status(404).json({ success: false, message: "Guide not found" });
@@ -93,8 +92,8 @@ const rejectGuide = async (req, res) => {
   }
 };
 
-//  Pending Homestays 
-const getPendingHomestays = async (req, res) => {
+// Pending Homestays
+export const getPendingHomestays = async (req, res) => {
   try {
     const homestays = await Homestay.find({ status: "pending" });
     res.json({ success: true, homestays });
@@ -104,7 +103,8 @@ const getPendingHomestays = async (req, res) => {
   }
 };
 
-const approveHomestay = async (req, res) => {
+// Approve homestay
+export const approveHomestay = async (req, res) => {
   try {
     const homestay = await Homestay.findByIdAndUpdate(
       req.params.id,
@@ -114,9 +114,8 @@ const approveHomestay = async (req, res) => {
     if (!homestay) 
       return res.status(404).json({ success: false, message: "Homestay not found" });
 
-    //  Upgrade the homestay owner to role "owner"
+    // Upgrade the homestay owner to role "owner"
     await User.findByIdAndUpdate(homestay.owner, { role: "owner" }, { new: true });
-
 
     res.json({ success: true, message: "Homestay approved", homestay });
   } catch (error) {
@@ -126,7 +125,7 @@ const approveHomestay = async (req, res) => {
 };
 
 // Reject homestay
-const rejectHomestay = async (req, res) => {
+export const rejectHomestay = async (req, res) => {
   try {
     const homestay = await Homestay.findByIdAndUpdate(
       req.params.id,
@@ -139,15 +138,4 @@ const rejectHomestay = async (req, res) => {
     console.error("Error rejecting homestay:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
-};
-
-module.exports = {
-  loginAdmin,
-  getDashboardData,
-  getPendingGuides,
-  approveGuide,
-  rejectGuide,
-  getPendingHomestays,
-  approveHomestay,
-  rejectHomestay,
 };

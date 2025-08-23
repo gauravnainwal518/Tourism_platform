@@ -1,5 +1,4 @@
-
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const homestaySchema = new mongoose.Schema(
   {
@@ -48,4 +47,4 @@ const homestaySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Homestay", homestaySchema);
+export default mongoose.model("Homestay", homestaySchema);

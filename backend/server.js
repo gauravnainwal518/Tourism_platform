@@ -6,7 +6,6 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-
 // Routes
 import authRoutes from './routes/authRoutes.js';         // User & Guide auth
 import guideRoutes from './routes/guideRoutes.js';       // Guide + bookings
@@ -55,19 +54,16 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Global error handler
-app.use(errorHandler);
-
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => logger.info('Connected to MongoDB'))
-  .catch(err => logger.error(`Error connecting to MongoDB: ${err.message}`));
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error(`Error connecting to MongoDB: ${err.message}`));
 
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

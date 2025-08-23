@@ -1,10 +1,10 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const Guide = require("../models/Guide");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import Guide from "../models/Guide.js";
 
 // Registration 
-const registerUserOrGuide = async (req, res) => {
+export const registerUserOrGuide = async (req, res) => {
   try {
     const {
       fullName,
@@ -70,8 +70,8 @@ const registerUserOrGuide = async (req, res) => {
   }
 };
 
-//  Login 
-const loginUserOrGuide = async (req, res) => {
+// Login 
+export const loginUserOrGuide = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -121,9 +121,4 @@ const loginUserOrGuide = async (req, res) => {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
-};
-
-module.exports = {
-  registerUserOrGuide,
-  loginUserOrGuide,
 };

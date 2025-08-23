@@ -1,6 +1,6 @@
-const Homestay = require("../models/Homestay");
-const HomestayBooking = require("../models/HomeStayBooking");
-const User = require("../models/User");
+import Homestay from "../models/Homestay.js";
+import HomestayBooking from "../models/HomestayBooking.js";
+import User from "../models/User.js";
 
 const homestayController = {
   // Get all homestays
@@ -24,9 +24,7 @@ const homestayController = {
     try {
       const { id } = req.params;
       const homestay = await Homestay.findById(id).populate("owner", "fullName email");
-      if (!homestay) {
-        return res.status(404).json({ error: "Homestay not found" });
-      }
+      if (!homestay) return res.status(404).json({ error: "Homestay not found" });
       res.json(homestay);
     } catch (error) {
       console.error("Error fetching homestay by ID:", error);
@@ -34,15 +32,14 @@ const homestayController = {
     }
   },
 
-  // Create new homestay (only for normal users)
+  // Create new homestay
   createHomestay: async (req, res) => {
     try {
       const { title, location, description, price } = req.body;
 
       if (!(req.user.role === "user" || req.user.role === "owner")) {
-  return res.status(403).json({ error: "Only users or owners can create a homestay" });
-}
-
+        return res.status(403).json({ error: "Only users or owners can create a homestay" });
+      }
 
       if (!title || !location || !description || !price) {
         return res.status(400).json({ error: "All fields are required" });
@@ -81,8 +78,7 @@ const homestayController = {
   // Get owner-specific homestays
   getOwnerHomestays: async (req, res) => {
     try {
-      const ownerId = req.user._id;
-      const homestays = await Homestay.find({ owner: ownerId });
+      const homestays = await Homestay.find({ owner: req.user._id });
       res.json(homestays);
     } catch (error) {
       console.error("Error fetching owner homestays:", error);
@@ -161,55 +157,53 @@ const homestayController = {
   },
 
   // Book homestay
-bookHomestay: async (req, res) => {
-  try {
-    const { startDate, endDate, guests, notes } = req.body;
-    const { id } = req.params;
+  bookHomestay: async (req, res) => {
+    try {
+      const { startDate, endDate, guests, notes } = req.body;
+      const { id } = req.params;
 
-    if (!startDate || !endDate) {
-      return res.status(400).json({ error: "Start and end dates are required" });
+      if (!startDate || !endDate) {
+        return res.status(400).json({ error: "Start and end dates are required" });
+      }
+
+      const homestay = await Homestay.findById(id);
+      if (!homestay || homestay.status !== "approved") {
+        return res.status(404).json({ error: "Homestay not found or not approved" });
+      }
+
+      const booking = new HomestayBooking({
+        homestay: homestay._id,
+        user: req.user._id,
+        owner: homestay.owner,
+        startDate,
+        endDate,
+        guests: guests || 1,
+        notes,
+        status: "pending",
+      });
+
+      await booking.save();
+      res.status(201).json({ message: "Homestay booked successfully", booking });
+    } catch (error) {
+      console.error("Error booking homestay:", error);
+      res.status(500).json({ error: "Failed to book homestay" });
     }
+  },
 
-    const homestay = await Homestay.findById(id);
-    if (!homestay || homestay.status !== "approved") {
-      return res.status(404).json({ error: "Homestay not found or not approved" });
+  // Get bookings for homestay owner
+  getBookingsForOwner: async (req, res) => {
+    try {
+      const bookings = await HomestayBooking.find({ owner: req.user._id })
+        .populate("user", "fullName email")
+        .populate("homestay", "title location price")
+        .sort({ createdAt: -1 });
+
+      res.json({ bookings });
+    } catch (error) {
+      console.error("Error fetching bookings for owner:", error);
+      res.status(500).json({ error: "Failed to fetch owner bookings" });
     }
-
-    const booking = new HomestayBooking({
-      homestay: homestay._id,
-      user: req.user._id,
-      owner: homestay.owner,   //  store owner here
-      startDate,
-      endDate,
-      guests: guests || 1,
-      notes,
-      status: "pending",       // default status
-    });
-
-    await booking.save();
-    res.status(201).json({ message: "Homestay booked successfully", booking });
-  } catch (error) {
-    console.error("Error booking homestay:", error);
-    res.status(500).json({ error: "Failed to book homestay" });
-  }
-},
-
-  
-// Get bookings for homestay owner
-getBookingsForOwner: async (req, res) => {
-  try {
-    const bookings = await HomestayBooking.find({ owner: req.user._id })
-      .populate("user", "fullName email")
-      .populate("homestay", "title location price")
-      .sort({ createdAt: -1 });
-
-    res.json({ bookings });
-  } catch (error) {
-    console.error("Error fetching bookings for owner:", error);
-    res.status(500).json({ error: "Failed to fetch owner bookings" });
-  }
-},
-
+  },
 
   // Get my bookings (user)
   getMyHomestayBookings: async (req, res) => {
@@ -271,7 +265,7 @@ getBookingsForOwner: async (req, res) => {
     }
   },
 
-  // Get available homestays (for users)
+  // Get available homestays
   getAvailableHomestays: async (req, res) => {
     try {
       const homestays = await Homestay.find({ status: "approved" });
@@ -283,4 +277,4 @@ getBookingsForOwner: async (req, res) => {
   },
 };
 
-module.exports = homestayController;
+export default homestayController;
