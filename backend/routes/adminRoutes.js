@@ -1,5 +1,5 @@
-const express = require("express");
-const { 
+import express from "express";
+import { 
   loginAdmin, 
   getDashboardData,
   getPendingGuides,
@@ -8,8 +8,8 @@ const {
   rejectGuide,
   approveHomestay,
   rejectHomestay
-} = require("../controllers/adminController");
-const { protect, adminOnly } = require("../middlewares/authMiddleware");
+} from "../controllers/adminController.js";
+import { protect, adminOnly } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -18,8 +18,6 @@ router.post("/login", loginAdmin);
 
 // GET /api/admin/dashboard - Protected & Admin-only
 router.get("/dashboard", protect, adminOnly, getDashboardData);
-
-//  New Routes 
 
 // GET pending guides
 router.get("/pending-guides", protect, adminOnly, getPendingGuides);
@@ -35,4 +33,4 @@ router.patch("/reject-guide/:id", protect, adminOnly, rejectGuide);
 router.patch("/approve-homestay/:id", protect, adminOnly, approveHomestay);
 router.patch("/reject-homestay/:id", protect, adminOnly, rejectHomestay);
 
-module.exports = router;
+export default router;

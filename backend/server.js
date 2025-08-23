@@ -1,21 +1,23 @@
 // main server file
-require('dotenv').config(); // Load environment variables
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path');
+import 'dotenv/config'; // Load environment variables
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Utils
-const errorHandler = require('./utils/errorHandler');
-const logger = require('./utils/logger');
 
 // Routes
-const authRoutes = require('./routes/authRoutes');         // User & Guide auth
-const guideRoutes = require('./routes/guideRoutes');       // Guide + bookings
-const homestayRoutes = require('./routes/homestayRoutes'); // Homestay + bookings
-const adminRoutes = require('./routes/adminRoutes');
+import authRoutes from './routes/authRoutes.js';         // User & Guide auth
+import guideRoutes from './routes/guideRoutes.js';       // Guide + bookings
+import homestayRoutes from './routes/homestayRoutes.js'; // Homestay + bookings
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
+
+// Get __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Allowed origins for CORS
 const allowedOrigins = [

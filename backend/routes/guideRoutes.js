@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   createGuide,
   getGuides,
   getGuideById,
@@ -12,17 +12,16 @@ const {
   getGuideBookings,
   updateBookingStatus,
   deleteGuideBooking,
-} = require("../controllers/guideController");
+} from "../controllers/guideController.js";
 
-const {
+import {
   protect,
   adminOnly,
   guideOrAdmin,
   guideOnly,
-} = require("../middlewares/authMiddleware");
+} from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
-
 
 // Get all verified guides
 router.get("/", getGuides);
@@ -33,16 +32,13 @@ router.get("/:id", getGuideById);
 // Get guide by User ID (for logged-in guide)
 router.get("/by-user/:userId", protect, getGuideByUserId); 
 
-
 // Get all pending guides (admin only)
 router.get("/pending/list", protect, adminOnly, getPendingGuides);
-
 
 // Guide CRUD
 router.post("/", protect, createGuide);
 router.put("/:id", protect, updateGuide);
 router.delete("/:id", protect, deleteGuide);
-
 
 // User books a guide
 router.post("/:id/book", protect, bookGuide);
@@ -59,4 +55,4 @@ router.patch("/bookings/:bookingId/status", protect, guideOrAdmin, updateBooking
 // Guide gets their own bookings
 router.get("/bookings/for-me", protect, guideOnly, getGuideBookings);
 
-module.exports = router;
+export default router;

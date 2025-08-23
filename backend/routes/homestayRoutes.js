@@ -1,13 +1,14 @@
-const express = require('express');
+import express from 'express';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import * as homestayController from '../controllers/homestayController.js';
+import { protect, adminOnly, guideOrAdmin, ownerOrAdmin, userOrOwner } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
-const homestayController = require('../controllers/homestayController');
-const { protect, adminOnly, guideOrAdmin, ownerOrAdmin,userOrOwner } = require('../middlewares/authMiddleware');
 
 // Ensure the 'uploads' folder exists
-const uploadDir = path.join(__dirname, '../uploads/homestays');
+const uploadDir = path.join(process.cwd(), 'uploads', 'homestays');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -27,13 +28,13 @@ const upload = multer({
   }
 });
 
-//  Routes 
+// Routes
 
-// Create homestay ( only "user","owner" not guide/admin)
+// Create homestay (only "user","owner")
 router.post(
   '/create',
   protect,
-  userOrOwner,   //  changed here
+  userOrOwner,
   upload.array('photos', 10),
   homestayController.createHomestay
 );
@@ -46,19 +47,13 @@ router.patch('/:id/approve', protect, adminOnly, homestayController.approveHomes
 
 // Bookings BEFORE /:id
 router.get('/bookings/me', protect, homestayController.getMyHomestayBookings);
-router.patch(
-  '/bookings/:bookingId/status',
-  protect,
-  ownerOrAdmin,
-  homestayController.updateBookingStatus
-);
+router.patch('/bookings/:bookingId/status', protect, ownerOrAdmin, homestayController.updateBookingStatus);
 
 // Delete/Cancel Booking 
 router.delete('/bookings/:bookingId', protect, homestayController.deleteHomestayBooking);
 
-//  Homestay Owner Dashboard 
+// Homestay Owner Dashboard 
 router.get('/bookings/for-me', protect, homestayController.getBookingsForOwner);
-
 
 // Get available homestays (for booking by users)
 router.get('/available', protect, homestayController.getAvailableHomestays);
@@ -68,7 +63,6 @@ router.get('/', homestayController.getAllHomestays);
 
 // Fetch homestays owned by logged-in user (owner)
 router.get('/for-me', protect, homestayController.getOwnerHomestays);
-
 
 // Get by ID (must come after fixed routes above)
 router.get('/:id', protect, homestayController.getHomestayById);
@@ -82,4 +76,4 @@ router.delete('/:id', protect, ownerOrAdmin, homestayController.deleteHomestay);
 // Book homestay (users)
 router.post('/:id/book', protect, homestayController.bookHomestay);
 
-module.exports = router;
+export default router;
