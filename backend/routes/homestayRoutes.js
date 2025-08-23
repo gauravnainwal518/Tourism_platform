@@ -29,7 +29,7 @@ const upload = multer({
   }
 });
 
-// Routes
+// Static / fixed routes first 
 
 // Create homestay (only "user","owner")
 router.post(
@@ -59,13 +59,15 @@ router.get('/bookings/for-me', protect, homestayController.getBookingsForOwner);
 // Get available homestays (for booking by users)
 router.get('/available', protect, homestayController.getAvailableHomestays);
 
-// Get all homestays
-router.get('/', homestayController.getAllHomestays);
-
 // Fetch homestays owned by logged-in user (owner)
 router.get('/for-me', protect, homestayController.getOwnerHomestays);
 
-// Get by ID (must come after fixed routes above)
+// Get all homestays
+router.get('/', homestayController.getAllHomestays);
+
+//  Dynamic routes 
+
+// Get by ID
 router.get('/:id', protect, homestayController.getHomestayById);
 
 // Update (owner or admin)
