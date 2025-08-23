@@ -1,5 +1,5 @@
-// main server file
-import 'dotenv/config'; // Load environment variables
+// server.js
+import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -7,21 +7,21 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 // Routes
-import authRoutes from './routes/authRoutes.js';         // User & Guide auth
-import guideRoutes from './routes/guideRoutes.js';       // Guide + bookings
-import homestayRoutes from './routes/homestayRoutes.js'; // Homestay + bookings
+import authRoutes from './routes/authRoutes.js';
+import guideRoutes from './routes/guideRoutes.js';
+import homestayRoutes from './routes/homestayRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
-// Get __dirname in ES module
+// __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Allowed origins for CORS
 const allowedOrigins = [
-  'http://localhost:5173',                  // Local frontend
-    // Production frontend
+  'http://localhost:5173', // local frontend
+  // Add production frontend here if deployed later
 ];
 
 // Middleware
@@ -36,22 +36,20 @@ app.use(cors({
   methods: 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
   credentials: true,
 }));
-
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/guides', guideRoutes);        // Guide-related + bookings
-app.use('/api/homestays', homestayRoutes);  // Homestay-related + bookings
+app.use('/api/guides', guideRoutes);
+app.use('/api/homestays', homestayRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Catch-all 404 route (prevents path-to-regexp errors)
-app.all('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Serve frontend in production
+// Serve frontend in production (optional, can enable later)
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/dist')));
   app.get('*', (_, res) => {
@@ -65,10 +63,8 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 })
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error(`Error connecting to MongoDB: ${err.message}`));
+  .catch(err => console.error(`MongoDB connection error: ${err.message}`));
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
