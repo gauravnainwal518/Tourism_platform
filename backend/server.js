@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 // Allowed origins for CORS
 const allowedOrigins = [
   'http://localhost:5173',                  // Local frontend
-  'https://tourism-platform.onrender.com'  // Production frontend
+    // Production frontend
 ];
 
 // Middleware
@@ -45,6 +45,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/guides', guideRoutes);        // Guide-related + bookings
 app.use('/api/homestays', homestayRoutes);  // Homestay-related + bookings
 app.use('/api/admin', adminRoutes);
+
+// Catch-all 404 route (prevents path-to-regexp errors)
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
