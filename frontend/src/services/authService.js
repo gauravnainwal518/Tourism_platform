@@ -1,37 +1,29 @@
+import axios from "axios";
+import { API } from "../utils/apiConfig";
 
-import axios from 'axios';
-
-//setting base api url
-const API_URL = import.meta.env.VITE_API_URL || 'https://tourism-platform.onrender.com/api/auth';
-
-
-
-
-
-const login = async (email, password) => {
+// LOGIN-> User or Guide
+const loginUserOrGuide = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
-    return response.data;
+    const response = await axios.post(`${API.AUTH}/login`, { email, password });
+    return response.data; // { success, token, user }
   } catch (error) {
-    console.error("Login error:", error.response ? error.response.data : error.message);
-    throw error;  // Propagate error for further handling
+    console.error("Login error:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Login failed");
   }
 };
 
-
-const register = async (name, email, password, role) => {
+// REGISTER-> User or Guide
+const registerUserOrGuide = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, { name, email, password, role });
-    return response.data;
+    const response = await axios.post(`${API.AUTH}/register`, userData);
+    return response.data; // { success, token, user }
   } catch (error) {
-    console.error("Registration error:", error.response ? error.response.data : error.message);
-    throw error;  // Propagate error for further handling
+    console.error("Registration error:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Registration failed");
   }
 };
 
-const authService = {
-  login,
-  register,
+export default {
+  loginUserOrGuide,
+  registerUserOrGuide,
 };
-
-export default authService;

@@ -1,60 +1,51 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const homestaySchema = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-            trim: true, // Removes leading and trailing spaces
-        },
-        location: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        description: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        pricePerNight: {
-            type: Number,
-            required: true,
-            min: 0, // Ensures price is not negative
-        },
-        amenities: {
-            type: [String],
-            required: true,
-            validate: {
-                validator: function (v) {
-                    return v.length > 0; // Ensures at least one amenity is provided
-                },
-                message: 'A homestay must have at least one amenity.',
-            },
-        },
-        photos: {
-            type: [String],
-            default: [],
-            validate: {
-                validator: function (v) {
-                    return v.length <= 10; // Restricts the maximum number of photos
-                },
-                message: 'A homestay cannot have more than 10 photos.',
-            },
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now, // Automatically set the creation timestamp
-        },
-        updatedAt: {
-            type: Date,
-            default: Date.now,
-        },
+const mongoose = require("mongoose");
+
+const homestaySchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: [true, "Homestay title is required"],
+      trim: true,
     },
-    {
-        timestamps: true, // Automatically manage createdAt and updatedAt fields
-    }
+    description: {
+      type: String,
+      required: [true, "Description is required"],
+      minlength: 20,
+    },
+    location: {
+      type: String,
+      required: [true, "Location is required"],
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: [true, "Price is required"],
+      min: [0, "Price cannot be negative"],
+    },
+    images: {
+      type: [String],
+      validate: {
+        validator: function (arr) {
+          return arr.length <= 10;
+        },
+        message: "You can upload up to 10 images only",
+      },
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    ownerName: { type: String },
+    ownerEmail: { type: String },
+  },
+  { timestamps: true }
 );
 
-module.exports = mongoose.model('Homestay', homestaySchema);
+module.exports = mongoose.model("Homestay", homestaySchema);

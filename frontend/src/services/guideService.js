@@ -1,53 +1,61 @@
-import axios from 'axios';
+import { fetchWithAuth } from "../utils/fetchWithAuth";
+import { API } from "../utils/apiConfig";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://tourism-platform.onrender.com/api/guides';
-
-// Function to create a new guide
-const createGuide = async (guideData, token) => {
-  try {
-    const response = await axios.post(`${API_URL}/create`, guideData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to create guide');
-  }
+// Create a new guide application
+export const createGuide = async (guideData) => {
+  const res = await fetchWithAuth(`${API.GUIDES}/create`, {
+    method: "POST",
+    body: JSON.stringify(guideData),
+  });
+  return res.data || res;
 };
 
-// Function to get all guides
-const getAllGuides = async (token) => {
-  try {
-    const response = await axios.get('https://tourism-platform.onrender.com/api/guides', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch guides');
-  }
+// Fetch all guides (verified/public)
+export const getAllGuides = async () => {
+  const res = await fetchWithAuth(API.GUIDES, { method: "GET" }, false);
+  return res.data || [];
 };
 
-// Function to get a single guide by ID
+// Fetch a single guide by ID
+//No authorization token needed 
+export const getGuideById = async (id) => {
+  const res = await fetchWithAuth(`${API.GUIDES}/${id}`, { method: "GET" }, false);
+  return res?.data; // always return the guide object
+};
 
+// Fetch guide by User ID //useful in guideDashboard view profile means guideDetails and guideEditform
+export const getGuideByUserId = async (userId) => {
+  const res = await fetchWithAuth(`${API.GUIDES}/by-user/${userId}`, { method: "GET" }, false);
+  return res.data || res;
+};
 
-// Function to update a guide
+// Update a guide (owner edit or admin verify)
+export const updateGuide = async (id, guideData) => {
+  const res = await fetchWithAuth(`${API.GUIDES}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(guideData),
+  });
+  return res.data || res;
+};
 
+// Delete a guide
+export const deleteGuide = async (id) => {
+  await fetchWithAuth(`${API.GUIDES}/${id}`, { method: "DELETE" });
+  return id;
+};
 
-// Function to delete a guide
+// Get all pending guides (admin only)
+export const getPendingGuides = async () => {
+  const res = await fetchWithAuth(`${API.ADMIN}/pending-guides`, { method: "GET" });
+  return res.data || [];
+};
 
-// Exporting all functions as named exports and also as a default export
-const guideService = {
+export default {
   createGuide,
   getAllGuides,
- 
-};
-
-export default guideService;
-export {
-  createGuide,
-  getAllGuides,
-  
+  getGuideById,
+  getGuideByUserId,
+  updateGuide,
+  deleteGuide,
+  getPendingGuides,
 };

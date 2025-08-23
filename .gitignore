@@ -10,6 +10,7 @@ frontend/dist/
 # Ignore environment variables
 .env
 frontend/.env
+backend/.env
 
 # Ignore logs
 logs/

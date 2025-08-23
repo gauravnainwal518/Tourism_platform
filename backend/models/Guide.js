@@ -1,41 +1,15 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose");
 
-
-const guideSchema = new Schema({
-  /*user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User', // Reference to the User model
-    required: true
+const guideSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    mobile: { type: String, required: true },
+    languages: { type: [String], required: true },
+    experience: { type: Number, required: true },
+    region: { type: String, required: true },
+    verified: { type: Boolean, default: false },
   },
-  */
- FullName: {
- type: String,
- required: true
- },
+  { timestamps: true }
+);
 
- 
-email:{
-type: String,
-required: true,
-unique: true
-
-},
-
-phoneNumber: {
-  type: String,
-  required: true,
-},
-
-  bio: {
-    type: String,
-    required: true
-  },
-  languages: {
-    type: [String],
-    required: true
-  },
- 
-}, { timestamps: true }); 
-
-module.exports = mongoose.model('Guide', guideSchema);
+module.exports = mongoose.model("Guide", guideSchema);

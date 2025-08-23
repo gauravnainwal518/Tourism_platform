@@ -1,18 +1,9 @@
-const express = require('express');
+const express = require("express");
+const { registerUserOrGuide, loginUserOrGuide } = require("../controllers/authController");
+
 const router = express.Router();
-const authController = require('../controllers/authController');
 
-// Register new user
-router.post('/register', authController.register);
-
-// Login user
-router.post('/login', authController.login);
-
-// Optional: Logout user (only if you have a logout function in authController)
-if (authController.logout) {
-    router.post('/logout', authController.logout); // Check if the logout function exists
-}
-
-
+router.post("/register", registerUserOrGuide);
+router.post("/login", loginUserOrGuide);
 
 module.exports = router;

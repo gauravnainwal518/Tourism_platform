@@ -1,27 +1,44 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getToken, removeToken, saveToken } from '../utils/tokenUtils'; // Utility functions for token management
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getToken, removeToken, setToken, setUserData, getUserData } from "../utils/token";
 
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
+  const [user, setUser] = useState(getUserData());
 
-  const login = (token) => {
-    saveToken(token);
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  }, []);
+
+  const login = ({ token, user }) => {
+    setToken(token);
+    setUserData(user);
     setIsAuthenticated(true);
-    navigate('/'); // Redirect to home or other protected route
+    setUser(user);
+
+    // Redirect based on role
+    if (user.role === "admin") navigate("/admin/dashboard");
+    else if (user.role === "guide") navigate("/guide/dashboard");
+    else navigate("/dashboard"); // normal user
   };
 
   const logout = () => {
     removeToken();
     setIsAuthenticated(false);
-    navigate('/login'); 
+    setUser(null);
+    navigate("/login");
   };
 
   return {
     isAuthenticated,
+    user,
     login,
-    logout
+    logout,
   };
 };
 
