@@ -6,15 +6,13 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Utils
-import errorHandler from './utils/errorHandler.js';
-import logger from './utils/logger.js';
+
 
 // Routes
-import authRoutes from './routes/authRoutes.js';         // User & Guide auth
-import guideRoutes from './routes/guideRoutes.js';       // Guide + bookings
-import homestayRoutes from './routes/homestayRoutes.js'; // Homestay + bookings
-import adminRoutes from './routes/adminRoutes.js';
+import {authRoutes} from './routes/authRoutes.js';         // User & Guide auth
+import {guideRoutes} from './routes/guideRoutes.js';       // Guide + bookings
+import {homestayRoutes} from './routes/homestayRoutes.js'; // Homestay + bookings
+import {adminRoutes} from './routes/adminRoutes.js';
 
 const app = express();
 
