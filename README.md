@@ -5,7 +5,7 @@ A MERN stack tourism platform that connects tourists with local guides, homestay
 ---
 
 ## Live Demo  
-Frontend (Vercel): [https://tourism-platform-kappa.vercel.app)  
+ [https://tourism-platform-kappa.vercel.app)  
 
 ---
 
@@ -73,4 +73,5 @@ npm run dev
 4. Open in browser
 Local: http://localhost:5173
 Live: tourism-platform-kappa.vercel.app
+
 
