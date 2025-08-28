@@ -1,29 +1,76 @@
-﻿# Tourism Platform
+# Tourist Platform  
 
-A full-stack web application built using the MERN stack (MongoDB, Express, React, Node.js) that connects tourists with local guides, homestays, and experiences in Uttarakhand.
+A MERN stack tourism platform that connects tourists with local guides, homestays, and unique experiences in Uttarakhand. The platform includes multiple dashboards with customized access for different roles.  
 
-## Features
+---
 
-- **User Authentication**: Register and log in to the platform.
-- **Booking System**: Book homestays and explore destinations.
-- **Responsive Design**: Fully responsive for mobile and desktop devices.
-- **Explore**: Explore beautiful destinations.
-- **Guides**: Contact with local guides.
-- **Register**: Register as guide and register your homestay.
+## Live Demo  
+Frontend (Vercel): [https://tourism-platform-kappa.vercel.app)  
 
-- **Live-link**: https://tourism-platform.onrender.com
+---
 
-## Technologies Used
+## Tech Stack  
+- **Frontend:** React, Vite, Tailwind CSS  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB  
+- **Authentication:** JWT (JSON Web Tokens)  
+- **Deployment:** Vercel (frontend), Render (backend)  
 
-- **Frontend**:
+---
 
-  - React.js
-  - React Router
-  - Tailwind CSS
-  - Axios
+## Features  
+- User authentication and authorization  
+- Browse and book guides  
+- Search and book homestays  
+- Explore local experiences  
+- Booking management system  
+- Admin controls for managing users and listings  
 
-- **Backend**:
+---
 
-  - Node.js
-  - Express.js
-  - MongoDB (Mongoose)
+## Installation  
+
+### 1. Clone the repository  
+```bash
+git clone https://github.com/gauravnainwal518/tourist-platform.git
+
+2. Backend Setup
+cd backend
+npm install
+
+Create a .env file inside the backend folder:
+PORT=5000
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret_key
+JWT_EXPIRATION=1d
+ADMIN_EMAIL=your_preferred_email_here
+ADMIN_PASSWORD=your_chosen_admin_password
+
+Run backend:
+npm run dev
+
+3. Frontend Setup
+cd frontend
+npm install
+
+Create a .env file inside the frontend folder:
+# Frontend Environment Variables
+VITE_API_BASE=https://your-backend-url.onrender.com/api
+
+# API Endpoints
+VITE_API_AUTH=/auth
+VITE_API_GUIDES=/guides
+VITE_API_HOMESTAYS=/homestays
+VITE_API_BOOKINGS=/bookings
+VITE_API_ADMIN=/admin
+
+# External API Keys
+VITE_GEOAPIFY_API_KEY=your_api_key_here
+
+Run frontend:
+npm run dev
+
+4. Open in browser
+Local: http://localhost:5173
+Live: tourism-platform-kappa.vercel.app
+
