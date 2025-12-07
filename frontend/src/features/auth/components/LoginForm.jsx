@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../components/Button";
 import { loginUserOrGuide } from "../../../features/auth/authSlice";
+import { Link } from "react-router-dom";
 import {
   getToken,
   setToken,
@@ -146,12 +147,12 @@ const LoginForm = () => {
 
       <p className="text-sm mt-4 text-center text-gray-600">
         Don’t have an account?{" "}
-        <a
-          href="/register"
+        <Link
+          to="/register"
           className="text-green-700 font-semibold hover:underline"
         >
           Register here
-        </a>
+        </Link>
       </p>
     </form>
   );
